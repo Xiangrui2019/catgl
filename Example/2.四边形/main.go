@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"gitee.com/LittleRuicat/catgl"
+	"github.com/go-gl/mathgl/mgl32"
 	// "github.com/go-gl/gl/v3.3-core/gl"
 	// "github.com/go-gl/glfw/v3.1/glfw"
 )
@@ -37,7 +38,9 @@ func Triangle(Gw *catgl.ShowGl) {
 	})
 	//? 主渲染
 	Gc := (&catgl.Camera{}).New(2, 2, 0).Set(Gw) //? 创建相机
+	Ry := mgl32.Rotate3DY(0.005)
 	Gw.AddRender("四边形", func() {
+		Gc.Eye = Ry.Mul3x1(Gc.Eye)
 		Gc.Update()
 	})
 }

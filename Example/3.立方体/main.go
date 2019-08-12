@@ -11,31 +11,46 @@ import (
 
 func main() {
 	//* 创建窗口
-	Gw, _ := catgl.ShowGlNew(900, 600, "创建三角形示例")
-	//*　创建三角形
+	Gw, _ := catgl.ShowGlNew(900, 600, "创建立方体示例")
+	//*　创建四边形
 	Triangle(Gw)
 	//* 主循环
 	catgl.ShowGlLoop()
 }
-// Triangle 顶点创建三角形
+
+// Triangle 顶点创建四边形
 func Triangle(Gw *catgl.ShowGl) {
 	//? 创建顶点
-	vertex := NewShader(Gw).NewVertex()
+	shader := NewShader(Gw)
+	vertex := shader.NewVertex()
 	//?　设置顶点
-	vertex.SetVertex([]float32{
-		//* 顶点位置
-		0.5, -0.5, 0.0, // 右下
-		-0.5, -0.5, 0.0, // 左下
-		0.0, 0.5, 0.0, // 顶部
+	vertex.SetVertex([]float32{ // 位置
+		-0.5, -0.5, -0.5,
+		0.5, -0.5, -0.5,
+		0.5, 0.5, -0.5,
+		-0.5, 0.5, -0.5,
+		-0.5, -0.5, 0.5,
+		0.5, -0.5, 0.5,
+		0.5, 0.5, 0.5,
+		-0.5, 0.5, 0.5,
 	}, nil, nil)
+	vertex.SetIndex([]uint32{
+		0, 1, 2, 2, 3, 0,
+		4, 5, 6, 6, 7, 4,
+		7, 3, 0, 0, 4, 7,
+		6, 2, 1, 1, 5, 6,
+		0, 1, 5, 5, 4, 0,
+		3, 2, 6, 6, 7, 3,
+	})
 	//? 主渲染
-	Gc := (&catgl.Camera{}).New(5, 5, 0).Set(Gw) //? 创建相机
+	Gc := (&catgl.Camera{}).New(2, 2, 0).Set(Gw) //? 创建相机
 	Ry := mgl32.Rotate3DY(0.005)
-	Gw.AddRender("三角形", func() {
+	Gw.AddRender("四边形", func() {
 		Gc.Eye = Ry.Mul3x1(Gc.Eye)
 		Gc.Update()
 	})
 }
+
 // NewShader 默认着色器
 func NewShader(Gw *catgl.ShowGl) *catgl.Shader {
 	//? 设置当前上下文

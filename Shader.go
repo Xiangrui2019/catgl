@@ -95,9 +95,7 @@ func (S *Shader) Delete() error {
 // Update 更新着色器
 func (S *Shader) Update() {
 	if S.ifCreate {
-		//? 激活着色器程序
-		gl.UseProgram(S.Program)
-		// 更新顶点
+		//? 更新顶点列表
 		for _, Vertex := range S.QueueVertex {
 			//? 更新顶点
 			Vertex.Update(S.Program)

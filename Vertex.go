@@ -92,7 +92,7 @@ func (V *Vertex) SetVertex(
 	gl.GenVertexArrays(1, &(V.VAO))
 	// 绑定VAO
 	gl.BindVertexArray(V.VAO)
-	/*..\ 创建缓存 /..*/
+	//!..............创建缓存..............!\\
 	// 设置顶点缓存
 	gl.GenBuffers(1, &(V.Buffer))
 	gl.BindBuffer(gl.ARRAY_BUFFER, V.Buffer)
@@ -176,7 +176,20 @@ func (V *Vertex) Update(Program uint32) {
 	cameraUniform := gl.GetUniformLocation(Program, gl.Str("vP_ModelPos\x00"))
 	gl.UniformMatrix4fv(cameraUniform, 1, false, &(V.Position[0]))
 	//? 设置材质
-	gl.Uniform1i(gl.GetUniformLocation(Program, gl.Str("ourTexture\x00")), 0)
+	// gl.Uniform1i(gl.GetUniformLocation(Program, gl.Str("ourTexture\x00")), 0)
+	// ? 设置灯光信息
+	// 参数测试
+	VfModelColor := mgl32.Vec3{1.0, 0.5, 0.31}
+	VfLightColor := mgl32.Vec3{1.0, 1.0, 1.0}
+	VflightPos := mgl32.Vec3{2.0, 2.0, 0.0}
+	// 设置灯光参数
+	UniformobjectColor := gl.GetUniformLocation(Program, gl.Str("fP_ModelColor\x00"))
+	UniformlightColor := gl.GetUniformLocation(Program, gl.Str("fP_LightColor\x00"))
+	UniformlightPos := gl.GetUniformLocation(Program, gl.Str("fP_LightPos\x00"))
+	gl.Uniform3fv(UniformobjectColor, 1, &VfModelColor[0]) // 物体颜色
+	gl.Uniform3fv(UniformlightColor, 1, &VfLightColor[0])  // 光源颜色
+	gl.Uniform3fv(UniformlightPos, 1, &VflightPos[0])      // 灯光位置
+
 	//? 判断是否为索引
 	if V.ifIndex {
 		gl.DrawElements(V.DisplayMode, V.indexN, gl.UNSIGNED_INT, gl.PtrOffset(0))

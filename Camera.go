@@ -43,27 +43,15 @@ func (C *Camera) Set(S *ShowGl) *Camera {
 func (C *Camera) Update() {
 	// 循环设置着色器值
 	for _, Shader := range C.ShowGl.QueueShader {
-		// 设置矩阵
+		// ? 激活着色器
 		gl.UseProgram(Shader.Program)
 		// ? 投影矩阵
 		projectionUniform := gl.GetUniformLocation(Shader.Program, gl.Str("vP_Projection\x00"))
 		gl.UniformMatrix4fv(projectionUniform, 1, false, &C.Projection[0])
 		// ? 摄像机位置
 		cameraUniform := gl.GetUniformLocation(Shader.Program, gl.Str("vP_CameraPos\x00"))
-		look := mgl32.LookAtV(C.Eye, C.Center, C.Up)
+		look := mgl32.LookAtV(C.Eye, C.Center, C.Up) // ? 摄像机朝向
 		gl.UniformMatrix4fv(cameraUniform, 1, false, &look[0])
-		// ? 设置灯光信息
-		// 参数测试
-		VfModelColor := mgl32.Vec3{1.0, 0.5, 0.31}
-		VfLightColor := mgl32.Vec3{1.0, 1.0, 1.0}
-		VflightPos := mgl32.Vec3{2.0, 2.0, 0.0}
-		// 设置灯光参数
-		UniformobjectColor := gl.GetUniformLocation(Shader.Program, gl.Str("fP_ModelColor\x00"))
-		UniformlightColor := gl.GetUniformLocation(Shader.Program, gl.Str("fP_LightColor\x00"))
-		UniformlightPos := gl.GetUniformLocation(Shader.Program, gl.Str("fP_LightPos\x00"))
-		gl.Uniform3fv(UniformobjectColor, 1, &VfModelColor[0]) // 物体颜色
-		gl.Uniform3fv(UniformlightColor, 1, &VfLightColor[0])  // 光源颜色
-		gl.Uniform3fv(UniformlightPos, 1, &VflightPos[0])      // 灯光位置
 		// ? 更新着色器
 		Shader.Update()
 	}
